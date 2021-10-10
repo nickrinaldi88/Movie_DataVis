@@ -14,11 +14,103 @@ d3.csv("out.csv").then(function (data){
 
     // create series variable.
 
-    console.log(data.columns.slice(9, 20))
+    // console.log(data.columns.slice(9, 20))
+
+    // console.log(typeof(data.columns.slice(9, 20)))
 
     // slices data columns
-    // look up slice function, .map
-    let series = data.columns.slice(9, 20).map(key => data.map(({[key]: value, date}) => ({key, date, value})))
+    // look up slice function, 
+    // data.colums.slice is an array 
+    // map creates a new array populae with results of calling provided funciton 
+
+    //  //   console.log(csv);
+    let current_data = {};
+    let parse = d3.timeParse("%Y-%m-%d");
+
+    let bros = ['Derek',
+                'Daniel',
+                'DP',
+                'Nick',
+                'Austin',
+                'Connor',
+                'Basil',
+                'Mike V',
+                'Gil',
+                'Will',
+                'Guest']
+
+    // Generate mapping object of [picked by] to movie: viewer, viewer rating
+    // attached mapping values to select statements
+    // implement line logic to depend on values selected 
+
+  for (let j = 0; j < bros.length; j++) {
+
+      for (let i = 0; i < data.length; i++) {
+        // line of data
+        let item = data[i];
+
+        let movie = item['Movie']
+        let picked = item['Picked by:']
+        let viewer = bros[j]
+        let viewer_rating = item[bros[j]]
+        console.log("row " + String(i));
+        console.log("Movie: " + String(item['Movie']));
+        console.log("Picked By: " + String(item['Picked by:']));
+        console.log("Viewer: " + String(bros[j]));
+        console.log("Viewer Rating: "  + String(item[bros[j]]));        // console.log(typeof(item))
+        // console.log(item.Derek);
+        // console.log(bros[j]);
+        // console.log(item.bros[j]);
+    }
+  
+    
+    }
+
+    // for (let i = 0; i < data.length; i++) {
+    //   let item = data[i];
+      // if (!current_data[item.]) current_data[item.Word] = [];
+
+    // current_data[bros[j]].push({
+    //   date: parse(item.Date),
+    //   rating: item.value,
+    //   pickedBy: item.  
+
+  
+  
+  
+  
+  
+  
+  //   }
+
+  // for (let i = 0; i < data.length; i++) {
+  //     let item = data[i];
+  //     if (!current_data[item.]) current_data[item.Word] = [];
+
+  //   current_data[item.Word].push({
+  //     date: parse(item.Date),
+  //     count: item.Count,
+  //   });
+  // }
+
+
+
+
+
+
+
+
+
+    // let rangeOfbros = [9, 20]
+    // let bros =  {rating:,
+    //              movie_name: data['Movie'],
+    //              Picked_by: data['Picked by:'],
+                //  date: data['Date']}
+
+    console.log(data.columns('Picked by:'))
+    let series = data.columns.slice(9, 20).map(key => data.map(({[key]: value,  date}) => ({key, date, value})))
+
+
 
 
     const svg = d3.create("svg")
@@ -81,7 +173,7 @@ d3.csv("out.csv").then(function (data){
 
 
 
-    });
+  });
     
 
 
