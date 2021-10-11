@@ -137,7 +137,7 @@ d3.csv("out.csv").then(function (data){
 
     console.log(serie);
 
-    var u = svg.selectAll(".lineTest").data([data]);
+    var u = svg.selectAll(".lineTest").data([current_data]);
 
     // Update the line
     u.enter()
@@ -154,7 +154,7 @@ d3.csv("out.csv").then(function (data){
             return x(d.date);
           })
           .y(function (d) {
-            return y(d.count);
+            return y(d.viewer_rating);
           })
       )
       .attr("fill", "none")
