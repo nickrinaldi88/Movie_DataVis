@@ -1,1 +1,2 @@
-1. Make comments of code 
+1. Display sample data of Derek's ratings of Nick's movies
+2. Make it so whatever bro gets selected in dropdown, corresponds to line movement in graph
