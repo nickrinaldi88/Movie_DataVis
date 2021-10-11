@@ -115,12 +115,6 @@ d3.csv("out.csv").then(function (data){
         return d
       });
 
-
-    xAxis = g => g
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-
-    
-
     x = d3.scaleUtc()
         .domain([data[0].date, data[data.length - 1].date])
         .range([margin.left, width - margin.right])
@@ -131,13 +125,41 @@ d3.csv("out.csv").then(function (data){
 
     z = d3.scaleOrdinal(data.columns.slice(9, 20), d3.schemeCategory10)
 
-    var xAxis = d3.axisBottom().scale(x)
-    var yAxis = d3.axisLeft().scale(y);
+    var xAxis = g => g
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .scale(x)
+
+    // var xAxis = d3.axisBottom().scale(x)
+    // var yAxis = d3.axisLeft().scale(y);
 
     svg.append("g")
         .call(xAxis) // call x axis
 
     console.log(serie);
+
+    var u = svg.selectAll(".lineTest").data([data]);
+
+    // Update the line
+    u.enter()
+      .append("path")
+      .attr("class", "lineTest")
+      .merge(u)
+      .transition()
+      .duration(3000)
+      .attr(
+        "d",
+        d3
+          .line()
+          .x(function (d) {
+            return x(d.date);
+          })
+          .y(function (d) {
+            return y(d.count);
+          })
+      )
+      .attr("fill", "none")
+      .attr("stroke", "white")
+      .attr("stroke-width", 2.5);
     
     current_data.append("path")
           .attr("fill", "none")
