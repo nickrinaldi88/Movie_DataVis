@@ -1,6 +1,7 @@
-select{
-    display: block;
+select {
+    display: inline-block;
     margin: 0 auto;
     margin-bottom: 100px;
-    
-} 
+
+
+}

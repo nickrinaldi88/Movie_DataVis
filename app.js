@@ -84,12 +84,6 @@ d3.csv("out.csv").then(function (data){
     .attr("viewBox", "0 0 1400 500")
     .append("g")
     .attr("transform", "translate(80, 20)");
-    
-
-    const serie = svg.append("g")
-    .selectAll("g")
-    .data(current_data)
-    .join("g");
 
     ratings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     
@@ -125,75 +119,50 @@ d3.csv("out.csv").then(function (data){
 
     z = d3.scaleOrdinal(data.columns.slice(9, 20), d3.schemeCategory10)
 
-    var xAxis = g => g
+    xAxis = g => g
         .attr("transform", `translate(0,${height - margin.bottom})`)
-        .scale(x)
-
-    // var xAxis = d3.axisBottom().scale(x)
-    // var yAxis = d3.axisLeft().scale(y);
+        .call(d3.axisBottom(x).ticks(width/80).tickSizeOuter(0))
 
     svg.append("g")
-        .call(xAxis) // call x axis
+        .call(xAxis)
 
-    console.log(serie);
+    const serie = svg.append("g")
+          .selectAll("g")
+          .data(current_data)
+          .join("g")
 
-    var u = svg.selectAll(".lineTest").data([current_data]);
+    serie.append("path")
+      .attr("fill", "none")
+      .attr("stroke", d => z(d[0].key))
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+          .x(d=> x(d.date))
+          .y(d=> y(d.viewer_rating)));
 
-    // Update the line
-    u.enter()
-      .append("path")
-      .attr("class", "lineTest")
-      .merge(u)
-      .transition()
-      .duration(3000)
-      .attr(
-        "d",
-        d3
-          .line()
-          .x(function (d) {
-            return x(d.date);
-          })
-          .y(function (d) {
-            return y(d.viewer_rating);
-          })
-      )
+
+    serie.append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .attr("stroke-linecap", "round")
+      .attr("stroke-linejoin", "round")
+      .attr("text-anchor", "middle")
+    .selectAll("text")
+    .data(d => d)
+    .join("text")
+      .text(d => d.viewer_rating)
+      .attr("dy", "0.35em")
+      .attr("x", d=> x(d.date))
+      .attr("y", d=> y(d.viewer_rating))
+      .call(text => text.filter((d, i, data) => i === data.length -1))
+      .append("tspan")
+        .attr("font-weight", "bold")
+        .text(d =>`${d.key}`)
+    .clone(true).lower()
       .attr("fill", "none")
       .attr("stroke", "white")
-      .attr("stroke-width", 2.5);
-    
-    current_data.append("path")
-          .attr("fill", "none")
-          .attr("stroke", d => z(d[0].key))
-          .attr("stroke-width", 1.5)
-          .attr("d", d3.line()
-              .x(d => x(d.date))
-              .y(d => y(d.Derek)));
-    
-    current_data.append("g")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", 10)
-          .attr("stroke-linecap", "round")
-          .attr("stroke-linejoin", "round")
-          .attr("text-anchor", "middle")
-        .selectAll("text")
-        .data(d => d)
-        .join("text")
-          .text(d => d.value)
-          .attr("dy", "0.35em")
-          .attr("x", d => x(d.date))
-          .attr("y", d => y(d.value))
-          .call(text => text.filter((d, i, data) => i === data.length - 1)
-            .append("tspan")
-              .attr("font-weight", "bold")
-              .text(d => ` ${d.key}`))
-        .clone(true).lower()
-          .attr("fill", "none")
-          .attr("stroke", "white")
-          .attr("stroke-width", labelPadding);
-    
-      return svg.node();
+      .attr("stroke-width", labelPadding)
 
-
+    return svg.node();
 
   });
     
