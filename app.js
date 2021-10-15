@@ -10,9 +10,9 @@ d3.csv("out.csv").then(function (data){
     let height = 500
     let labelPadding = 6
 
-    console.log(data)
+    // console.log(data)
 
-    // create series variable.
+    // create series variable
 
     // console.log(data.columns.slice(9, 20))
 
@@ -87,7 +87,7 @@ d3.csv("out.csv").then(function (data){
 
     ratings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     
-    console.log(current_data)
+    console.log(current_data.Derek)
 
     margin = ({top: 30, right: 50, bottom: 30, left: 30})
 
@@ -109,15 +109,16 @@ d3.csv("out.csv").then(function (data){
         return d
       });
 
+    z = d3.scaleOrdinal(data.columns.slice(9, 20), d3.schemeCategory10)
+
     x = d3.scaleUtc()
         .domain([data[0].date, data[data.length - 1].date])
         .range([margin.left, width - margin.right])
+        
 
     y = d3.scaleLinear()
         .domain([0, 10])
         .range([height - margin.bottom, margin.top])
-
-    z = d3.scaleOrdinal(data.columns.slice(9, 20), d3.schemeCategory10)
 
     xAxis = g => g
         .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -132,39 +133,41 @@ d3.csv("out.csv").then(function (data){
           .join("g")
 
     serie.append("path")
+      .merge(serie)
       .attr("fill", "none")
-      .attr("stroke", d => z(d[0].key))
+      .attr("stroke", "black")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
           .x(d=> x(d.date))
           .y(d=> y(d.viewer_rating)));
 
 
-    serie.append("g")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .attr("stroke-linecap", "round")
-      .attr("stroke-linejoin", "round")
-      .attr("text-anchor", "middle")
-    .selectAll("text")
-    .data(d => d)
-    .join("text")
-      .text(d => d.viewer_rating)
-      .attr("dy", "0.35em")
-      .attr("x", d=> x(d.date))
-      .attr("y", d=> y(d.viewer_rating))
-      .call(text => text.filter((d, i, data) => i === data.length -1))
-      .append("tspan")
-        .attr("font-weight", "bold")
-        .text(d =>`${d.key}`)
-    .clone(true).lower()
-      .attr("fill", "none")
-      .attr("stroke", "white")
-      .attr("stroke-width", labelPadding)
+    // serie.append("g")
+    //   .attr("font-family", "sans-serif")
+    //   .attr("font-size", 10)
+    //   .attr("stroke-linecap", "round")
+    //   .attr("stroke-linejoin", "round")
+    //   .attr("text-anchor", "middle")
+    // .selectAll("text")
+    // .data(d => d)
+    // .join("text")
+    //   .text(d => d.viewer_rating)
+    //   .attr("dy", "0.35em")
+    //   .attr("x", d=> x(d.date))
+    //   .attr("y", d=> y(d.viewer_rating))
+    //   .call(text => text.filter((d, i, data) => i === data.length -1))
+    //   .append("tspan")
+    //     .attr("font-weight", "bold")
+    //     .text(d =>`${d.key}`)
+    // .clone(true).lower()
+    //   .attr("fill", "none")
+    //   .attr("stroke", "white")
+    //   .attr("stroke-width", labelPadding)
 
-    return svg.node();
+    // return svg.node();
 
-  });
+  }
+  );
     
 
 

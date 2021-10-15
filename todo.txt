@@ -1,2 +1,5 @@
 1. Display sample data of Derek's ratings of Nick's movies
 2. Make it so whatever bro gets selected in dropdown, corresponds to line movement in graph
+3. GET LINE TO APPEAR!!!!
+
+- Issue could be in current_data object, unable to plot. Investigate further.
