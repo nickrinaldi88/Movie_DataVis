@@ -10,7 +10,33 @@ d3.csv("out.csv").then(function (data){
     let height = 500
     let labelPadding = 6
 
-    // console.log(data)
+    console.log(data);
+
+        let bros = ['Derek',
+                'Daniel',
+                'DP',
+                'Nick',
+                'Austin',
+                'Connor',
+                'Basil',
+                'Mike V',
+                'Gil',
+                'Will',
+                'Guest']
+
+    for (let j = 0; j < bros.length; j++) {
+
+
+      for (let i = 0; i < data.length; i++) {
+        // line of data
+        let item = data[i];
+        let rating = item[bros[j]]
+        rating = +rating
+
+     
+    }};
+
+    console.log(typeof(data[0].Austin))
 
     // create series variable
 
@@ -23,56 +49,32 @@ d3.csv("out.csv").then(function (data){
     // data.colums.slice is an array 
     // map creates a new array populae with results of calling provided funciton 
 
+
+    
+
+    console.log(data.columns.slice(9, 20));
+    series = data.columns.slice(9, 20).map(key => data.map(({[key]: value, Date, Movie, Pickedby}) => ({key, Date, value, Movie, Pickedby})));
+    console.log(series[0]);
+    console.log(data['Picked by:'])
+
+    // series.forEach(d => {
+    //   d.value = +d.value;
+      
+    // });
+
+    console.log(series);
+
+    ;
+
     //  //   console.log(csv);
     var current_data = {};
     let parse = d3.timeParse("%Y-%m-%d");
-
-    let bros = ['Derek',
-                'Daniel',
-                'DP',
-                'Nick',
-                'Austin',
-                'Connor',
-                'Basil',
-                'Mike V',
-                'Gil',
-                'Will',
-                'Guest']
 
     // Generate mapping object of [picked by] to movie: viewer, viewer rating
     // attached mapping values to select statements
     // implement line logic to depend on values selected 
 
-  for (let j = 0; j < bros.length; j++) {
 
-
-      for (let i = 0; i < data.length; i++) {
-        // line of data
-        let item = data[i];
-
-        let film = item['Movie']
-        var picked = item['Picked by:']
-        let bro = bros[j]
-        let bro_rating = item[bros[j]]
-        let date = item['Date']
-
-      if (!current_data[bro]){
-        current_data[bro] = [];
-    };
-
-
-          current_data[bro].push({
-          picked_by: picked,
-          movie: film,
-          // viewer: bro,
-          viewer_rating: bro_rating,
-          date: date
-        });
-
-      
-      };
-  
-    };
 
     var svg = d3
     .select("#main-div")
@@ -87,7 +89,7 @@ d3.csv("out.csv").then(function (data){
 
     ratings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     
-    console.log(current_data.Derek)
+    // console.log(current_data.Derek)
 
     margin = ({top: 30, right: 50, bottom: 30, left: 30})
 
@@ -129,17 +131,16 @@ d3.csv("out.csv").then(function (data){
 
     const serie = svg.append("g")
           .selectAll("g")
-          .data(current_data)
+          .data(series)
           .join("g")
 
     serie.append("path")
-      .merge(serie)
       .attr("fill", "none")
       .attr("stroke", "black")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
           .x(d=> x(d.date))
-          .y(d=> y(d.viewer_rating)));
+          .y(d=> y(d.value)));
 
 
     // serie.append("g")
@@ -166,8 +167,7 @@ d3.csv("out.csv").then(function (data){
 
     // return svg.node();
 
-  }
-  );
+    });
     
 
 
