@@ -37,12 +37,38 @@ d3.csv("out.csv").then(function (data){
     // });
 
     console.log(series);
+    let parse = d3.timeParse("%M-%d-%Y");
 
-    ;
+    function convert(d) {
+        return {
+          date: new Date(d.date),
+          value: +d.value         // convert string to number
+        };
+      } 
+    
+    convert(series);
+
+    var svg = d3
+    .select("#main-div")
+    .classed("svg-container", true)
+    .append("svg")
+    // .attr("preserveAspectRatio", "xMinYMin meet")
+    // .attr("width", width + margin.left + margin.right)
+    // .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", "0 0 1400 500")
+    .append("g")
+    .attr("transform", "translate(80, 20)");
+
+    var focus = svg
+    .append('g')
+    .append('circle')
+      .style("fill", "none")
+      .attr("stroke", "black")
+      .attr('r', 8.5)
+      .style("opacity", 0)
 
     //  //   console.log(csv);
     var current_data = {};
-    let parse = d3.timeParse("%Y-%m-%d");
 
     let bros = ['Derek',
                 'Daniel',
@@ -91,17 +117,6 @@ d3.csv("out.csv").then(function (data){
   
     };
 
-    var svg = d3
-    .select("#main-div")
-    .classed("svg-container", true)
-    .append("svg")
-    // .attr("preserveAspectRatio", "xMinYMin meet")
-    // .attr("width", width + margin.left + margin.right)
-    // .attr("height", height + margin.top + margin.bottom)
-    .attr("viewBox", "0 0 1400 500")
-    .append("g")
-    .attr("transform", "translate(80, 20)");
-
     ratings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     
     // console.log(current_data.Derek)
@@ -129,10 +144,9 @@ d3.csv("out.csv").then(function (data){
     z = d3.scaleOrdinal(data.columns.slice(9, 20), d3.schemeCategory10)
 
     x = d3.scaleUtc()
-        .domain([data[0].date, data[data.length - 1].date])
+        .domain([data.Date, series[0][series[0].length - 1].Date])
         .range([margin.left, width - margin.right])
         
-
     y = d3.scaleLinear()
         .domain([0, d3.max(series, s => d3.max(s, d => d.value))])
         .range([height - margin.bottom, margin.top])
@@ -145,16 +159,18 @@ d3.csv("out.csv").then(function (data){
         .call(xAxis)
 
 
-    const serie = svg.append("g")
-          .selectAll("g")
-          .data(series)
-          .join("g")
+    svg.append("path")
+        .datum(series[0])
+        .join("g")
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 5.5)
+        .attr("d", d3.line()
+            .x(function(d) {return x(d.Date)})
+            .y(function(d) {return y(d.value)}))
 
-    serie.append("path")
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line().x(d=> x(d.Date)));
+
+    console.log(series[0])
 
 
     // serie.append("g")
@@ -178,8 +194,6 @@ d3.csv("out.csv").then(function (data){
     //   .attr("fill", "none")
     //   .attr("stroke", "white")
     //   .attr("stroke-width", labelPadding)
-
-    return svg.node();
 
     });
     
