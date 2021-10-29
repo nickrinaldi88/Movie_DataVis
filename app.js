@@ -30,7 +30,6 @@ d3.csv("out.csv").then(function (data){
 
     console.log(data.columns.slice(9, 20));
     series = data.columns.slice(9, 20).map(key => data.map(({[key]: value, Date, Movie, Pickedby}) => ({key, Date, value, Movie, Pickedby})));
-    console.log(series[0]);
     // series.forEach(d => {
     //   d.value = +d.value;
       
@@ -39,14 +38,18 @@ d3.csv("out.csv").then(function (data){
     console.log(series);
     let parse = d3.timeParse("%M-%d-%Y");
 
-    function convert(d) {
-        return {
-          date: new Date(d.date),
-          value: +d.value         // convert string to number
-        };
-      } 
+   
+    for (let j = 0; j < series.length; j++) {
+        for (let i = 0; i <series[j].length; i++){
+
+          series[j][i].Date = new Date(series[j][i])
+          series[j][i].value = Number(series[i][j].value)
+        
+        }
+    }
+
+    console.log(series)
     
-    convert(series);
 
     var svg = d3
     .select("#main-div")
@@ -169,8 +172,6 @@ d3.csv("out.csv").then(function (data){
             .x(function(d) {return x(d.Date)})
             .y(function(d) {return y(d.value)}))
 
-
-    console.log(series[0])
 
 
     // serie.append("g")
