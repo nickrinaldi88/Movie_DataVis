@@ -10,9 +10,6 @@ d3.csv("out.csv").then(function (data){
     let height = 500
     let labelPadding = 6
 
-    console.log(data);
-
-    console.log(data)
 
     // create series variable
 
@@ -26,29 +23,52 @@ d3.csv("out.csv").then(function (data){
     // map creates a new array populae with results of calling provided funciton 
 
 
-    
-
-    console.log(data.columns.slice(9, 20));
     series = data.columns.slice(9, 20).map(key => data.map(({[key]: value, Date, Movie, Pickedby}) => ({key, Date, value, Movie, Pickedby})));
     // series.forEach(d => {
     //   d.value = +d.value;
       
     // });
 
-    console.log(series);
-    let parse = d3.timeParse("%M-%d-%Y");
+
+
+    // series[0][0].value = parseFloat('0')
+
+    // console.log(typeof(series[0][0].value))
+    // console.log(series[0][0].value)
+
+    let new_series = {};
 
    
     for (let j = 0; j < series.length; j++) {
-        for (let i = 0; i <series[j].length; i++){
 
-          series[j][i].Date = new Date(series[j][i])
-          series[j][i].value = Number(series[i][j].value)
+      new_series[j] = []
+        for (let i = 0; i < series[j].length; i++){
+
+        if (!Number.isNaN(series[j][i].value)){
+
+          series[j][i].Date = new Date(series[j][i].Date)
+
+          series[j][i].value = parseFloat(series[j][i].value)
+
+          if (!Number.isNaN(series[j][i].value)){
+
+          
+            new_series[j][i] = {}
+            new_series[j][i] = series[j][i]
+            // let new_series = series.remove(series[i][j])
+
+          }
+          
+        
+        
         
         }
+
+
     }
 
-    console.log(series)
+    console.log(new_series);
+
     
 
     var svg = d3
@@ -89,10 +109,10 @@ d3.csv("out.csv").then(function (data){
     // attached mapping values to select statements
     // implement line logic to depend on values selected 
 
-  for (let j = 0; j < bros.length; j++) {
+    for (let j = 0; j < bros.length; j++) {
 
 
-      for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         // line of data
         let item = data[i];
 
@@ -106,7 +126,7 @@ d3.csv("out.csv").then(function (data){
         current_data[bro] = [];
     };
 
-
+      if (bro_rating !== 'x' || 'fp'){}
           current_data[bro].push({
           picked_by: picked,
           movie: film,
@@ -119,6 +139,8 @@ d3.csv("out.csv").then(function (data){
       };
   
     };
+
+    console.log()
 
     ratings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     
@@ -147,11 +169,11 @@ d3.csv("out.csv").then(function (data){
     z = d3.scaleOrdinal(data.columns.slice(9, 20), d3.schemeCategory10)
 
     x = d3.scaleUtc()
-        .domain([data.Date, series[0][series[0].length - 1].Date])
+        .domain([data.Date, new_series[0][new_series[0].length - 1].Date])
         .range([margin.left, width - margin.right])
         
     y = d3.scaleLinear()
-        .domain([0, d3.max(series, s => d3.max(s, d => d.value))])
+        .domain([0, d3.max(new_series, s => d3.max(s, d => d.value))])
         .range([height - margin.bottom, margin.top])
 
     xAxis = g => g
@@ -163,7 +185,7 @@ d3.csv("out.csv").then(function (data){
 
 
     svg.append("path")
-        .datum(series[0])
+        .datum(new_series)
         .join("g")
         .attr("fill", "none")
         .attr("stroke", "black")
@@ -195,10 +217,11 @@ d3.csv("out.csv").then(function (data){
     //   .attr("fill", "none")
     //   .attr("stroke", "white")
     //   .attr("stroke-width", labelPadding)
-
-    });
+    
+  
+  }});
     
 
-
+  
 // Implement inline labels
 // https://observablehq.com/@d3/inline-labels
